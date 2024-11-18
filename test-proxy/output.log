@@ -1,0 +1,18 @@
+nohup: ignoring input
+2024/11/18 20:19:24 register server for https代理(443端口)[118.25.196.166:443] is starting
+2024/11/18 20:19:24 omi web server: https代理(443端口) is running on https://118.25.196.166:443
+2024/11/18 21:16:28 http: TLS handshake error from 111.7.96.151:28202: read tcp 10.0.16.15:443->111.7.96.151:28202: read: connection reset by peer
+2024/11/18 21:16:28 http: proxy error: http: no Host in request URL
+2024/11/18 21:17:02 http: TLS handshake error from 123.160.223.72:8898: local error: tls: unexpected message
+2024/11/18 21:17:04 http: proxy error: http: no Host in request URL
+2024/11/18 21:26:33 http: TLS handshake error from 52.228.153.90:56650: read tcp 10.0.16.15:443->52.228.153.90:56650: read: connection reset by peer
+2024/11/18 21:26:34 http: TLS handshake error from 52.228.153.90:56662: read tcp 10.0.16.15:443->52.228.153.90:56662: read: connection reset by peer
+2024/11/18 21:26:34 http: TLS handshake error from 52.228.153.90:56674: tls: no cipher suite supported by both client and server
+2024/11/18 21:26:34 http: TLS handshake error from 52.228.153.90:56676: tls: client requested unsupported application protocols ([http/0.9 http/1.0 spdy/1 spdy/2 spdy/3 h2c hq])
+2024/11/18 21:26:35 http: TLS handshake error from 52.228.153.90:56686: tls: client requested unsupported application protocols ([hq h2c spdy/3 spdy/2 spdy/1 http/1.0 http/0.9])
+2024/11/18 21:26:35 http: TLS handshake error from 52.228.153.90:56688: tls: client offered only unsupported versions: [302 301]
+2024/11/18 21:26:36 http: TLS handshake error from 52.228.153.90:56694: read tcp 10.0.16.15:443->52.228.153.90:56694: read: connection reset by peer
+2024/11/18 21:26:36 http: TLS handshake error from 52.228.153.90:56700: read tcp 10.0.16.15:443->52.228.153.90:56700: read: connection reset by peer
+2024/11/18 21:26:37 http: TLS handshake error from 52.228.153.90:56708: read tcp 10.0.16.15:443->52.228.153.90:56708: read: connection reset by peer
+2024/11/18 21:26:37 http: TLS handshake error from 52.228.153.90:56712: read tcp 10.0.16.15:443->52.228.153.90:56712: read: connection reset by peer
+2024/11/18 22:01:44 http: TLS handshake error from 45.79.163.27:7404: EOF

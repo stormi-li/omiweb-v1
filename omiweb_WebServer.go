@@ -67,5 +67,6 @@ func (webServer *WebServer) Start(weight int) {
 			log.Fatalf("Failed to start server: %v", err)
 		}
 	})
-
 }
+
+

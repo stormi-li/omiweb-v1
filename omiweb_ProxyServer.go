@@ -29,7 +29,7 @@ func (proxyServer *ProxyServer) SetCache(cacheDir string, maxSize int) {
 	}
 }
 
-func (proxyServer *ProxyServer) Start() {
+func (proxyServer *ProxyServer) StartHttp() {
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		proxyServer.handleFunc(w, r)
 	})
@@ -37,6 +37,20 @@ func (proxyServer *ProxyServer) Start() {
 	proxyServer.webRegister.RegisterAndListen(1, func(port string) {
 		log.Println("omi web server: " + proxyServer.serverName + " is running on http://" + proxyServer.address)
 		err := http.ListenAndServe(port, nil)
+		if err != nil {
+			log.Fatalf("Failed to start server: %v", err)
+		}
+	})
+}
+
+func (proxyServer *ProxyServer) StartHttps(cert, key string) {
+	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		proxyServer.handleFunc(w, r)
+	})
+
+	proxyServer.webRegister.RegisterAndListen(1, func(port string) {
+		log.Println("omi web server: " + proxyServer.serverName + " is running on https://" + proxyServer.address)
+		err := http.ListenAndServeTLS(port, cert, key, nil)
 		if err != nil {
 			log.Fatalf("Failed to start server: %v", err)
 		}
