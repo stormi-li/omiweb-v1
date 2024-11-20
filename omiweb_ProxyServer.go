@@ -23,11 +23,7 @@ func (proxyServer *ProxyServer) handleFunc(w http.ResponseWriter, r *http.Reques
 }
 
 func (proxyServer *ProxyServer) SetCache(cacheDir string, maxSize int) {
-	var err error
 	proxyServer.cache = omicafe.NewFileCache(cacheDir, maxSize)
-	if err != nil {
-		panic(err)
-	}
 }
 
 func (proxyServer *ProxyServer) StartHttp() {

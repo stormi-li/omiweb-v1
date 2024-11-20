@@ -27,11 +27,7 @@ func (webServer *WebServer) EmbedSource(embeddedSource embed.FS) {
 }
 
 func (webServer *WebServer) SetCache(cacheDir string, maxSize int) {
-	var err error
 	webServer.cache = omicafe.NewFileCache(cacheDir, maxSize)
-	if err != nil {
-		panic(err)
-	}
 }
 
 func (webServer *WebServer) handleFunc(w http.ResponseWriter, r *http.Request) {

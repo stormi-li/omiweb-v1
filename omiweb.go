@@ -9,7 +9,3 @@ func NewClient(opts *redis.Options) *Client {
 		opts: opts,
 	}
 }
-
-func DisableLog() {
-	log_cache = false
-}
