@@ -4,7 +4,7 @@ go 1.23.2
 
 require github.com/go-redis/redis/v8 v8.11.5
 
-require github.com/stormi-li/omicafe-v1 v1.0.0 // indirect
+require github.com/stormi-li/omicafe-v1 v1.0.0
 
 require (
 	github.com/cespare/xxhash/v2 v2.1.2 // indirect
