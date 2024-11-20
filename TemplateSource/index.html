@@ -22,7 +22,8 @@
             background: linear-gradient(to right, #74ebd5, #acb6e5);
             font-family: Arial, sans-serif;
             overflow: hidden;
-            padding-top: 15vh; /* 向顶部靠拢 */
+            padding-top: 25vh;
+            /* 向顶部靠拢 */
         }
 
         /* 动态背景装饰 */
@@ -65,9 +66,12 @@
         }
 
         @keyframes float {
-            0%, 100% {
+
+            0%,
+            100% {
                 transform: translateY(0);
             }
+
             50% {
                 transform: translateY(-20px);
             }
@@ -75,7 +79,8 @@
 
         /* Logo 样式 */
         .logo {
-            font-size: 150px; /* 增大字体 */
+            font-size: 150px;
+            /* 增大字体 */
             font-weight: bold;
             color: #4285f4;
             text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
@@ -84,7 +89,8 @@
 
         /* 标语样式 */
         .tagline {
-            font-size: 24px; /* 增大字体 */
+            font-size: 24px;
+            /* 增大字体 */
             color: #666;
             margin-bottom: 30px;
             letter-spacing: 1px;
@@ -94,8 +100,10 @@
 
         /* 按钮样式 */
         .button {
-            padding: 16px 32px; /* 增大按钮大小 */
-            font-size: 20px; /* 增大字体 */
+            padding: 16px 32px;
+            /* 增大按钮大小 */
+            font-size: 20px;
+            /* 增大字体 */
             border: none;
             border-radius: 28px;
             background-color: #4285f4;
@@ -131,26 +139,20 @@
     </div>
 
     <!-- Logo -->
-    <div class="logo">Omi</div>
+    <div class="logo">omi</div>
 
     <!-- 标语 -->
     <p class="tagline">Do one thing, do it well</p>
 
     <!-- 按钮 -->
     <div class="button-container">
-        <button class="button" onclick="redirectToRequest()">Request Test</button>
-        <button class="button" onclick="redirectToProduct()">Omi Family</button>
+        <button class="button" onclick="redirectToRequest()">请求测试</button>
     </div>
 
     <script>
         // 跳转到请求页面
         function redirectToRequest() {
             window.location.href = "request_test.html"; // 替换为实际请求页面的 URL
-        }
-
-        // 跳转到产品页面
-        function redirectToProduct() {
-            window.location.href = "omi_family.html"; // 替换为实际 Omi 产品页面的 URL
         }
     </script>
 </body>

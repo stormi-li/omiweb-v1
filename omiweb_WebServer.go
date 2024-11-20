@@ -2,23 +2,24 @@ package omiweb
 
 import (
 	"embed"
-	"log"
 	"net/http"
 	"os"
-	"strings"
 
+	"github.com/go-redis/redis/v8"
 	"github.com/stormi-li/omicafe-v1"
+	"github.com/stormi-li/omiproxy-v1"
 	"github.com/stormi-li/omiserd-v1"
 )
 
 type WebServer struct {
-	router         *router
 	webRegister    *omiserd.Register
 	serverName     string
 	address        string
 	embeddedSource embed.FS
 	embedModel     bool
 	cache          *omicafe.FileCache
+	opts           *redis.Options
+	reverseProxy   *omiproxy.ReverseProxy
 }
 
 func (webServer *WebServer) EmbedSource(embeddedSource embed.FS) {
@@ -31,14 +32,6 @@ func (webServer *WebServer) SetCache(cacheDir string, maxSize int) {
 }
 
 func (webServer *WebServer) handleFunc(w http.ResponseWriter, r *http.Request) {
-	parts := strings.Split(r.URL.Path, "/")
-	if len(parts) > 0 && webServer.router.Has(parts[1]) {
-		pathRequestResolution(r, webServer.router)
-		httpProxy(w, r, webServer.cache)
-		websocketProxy(w, r)
-		return
-	}
-
 	filePath := r.URL.Path
 	if r.URL.Path == "/" {
 		filePath = index_path
@@ -54,14 +47,9 @@ func (webServer *WebServer) handleFunc(w http.ResponseWriter, r *http.Request) {
 }
 
 func (webServer *WebServer) Start(weight int) {
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+	webServer.reverseProxy = omiproxy.NewClient(webServer.opts).NewReverseProxy(webServer.serverName, webServer.address)
+	webServer.reverseProxy.SetFailCallback(func(w http.ResponseWriter, r *http.Request) {
 		webServer.handleFunc(w, r)
 	})
-	webServer.webRegister.RegisterAndListen(weight, func(port string) {
-		log.Println("omi web server: " + webServer.serverName + " is running on http://" + webServer.address)
-		err := http.ListenAndServe(port, nil)
-		if err != nil {
-			log.Fatalf("Failed to start server: %v", err)
-		}
-	})
+	webServer.reverseProxy.Start(weight)
 }
