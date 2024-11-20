@@ -7,6 +7,7 @@ import (
 	"os"
 	"strings"
 
+	"github.com/stormi-li/omicafe-v1"
 	"github.com/stormi-li/omiserd-v1"
 )
 
@@ -17,7 +18,7 @@ type WebServer struct {
 	address        string
 	embeddedSource embed.FS
 	embedModel     bool
-	cache          *fileCache
+	cache          *omicafe.FileCache
 }
 
 func (webServer *WebServer) EmbedSource(embeddedSource embed.FS) {
@@ -27,7 +28,7 @@ func (webServer *WebServer) EmbedSource(embeddedSource embed.FS) {
 
 func (webServer *WebServer) SetCache(cacheDir string, maxSize int) {
 	var err error
-	webServer.cache, err = newFileCache(cacheDir, maxSize)
+	webServer.cache = omicafe.NewFileCache(cacheDir, maxSize)
 	if err != nil {
 		panic(err)
 	}
@@ -68,5 +69,3 @@ func (webServer *WebServer) Start(weight int) {
 		}
 	})
 }
-
-

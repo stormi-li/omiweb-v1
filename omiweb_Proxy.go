@@ -10,6 +10,7 @@ import (
 	"strings"
 
 	"github.com/gorilla/websocket"
+	"github.com/stormi-li/omicafe-v1"
 )
 
 func pathRequestResolution(r *http.Request, router *router) {
@@ -35,7 +36,7 @@ func isWebSocketRequest(r *http.Request) bool {
 // 自定义 RoundTripper 用于捕获响应数据
 type captureResponseRoundTripper struct {
 	Transport http.RoundTripper
-	cache     *fileCache
+	cache     *omicafe.FileCache
 	url       *url.URL
 }
 
@@ -56,7 +57,7 @@ func (c *captureResponseRoundTripper) RoundTrip(r *http.Request) (*http.Response
 	resp.Body = io.NopCloser(bytes.NewReader(bodyBytes))
 
 	if c.cache != nil && r.Method == "GET" {
-		go c.cache.UpdateCache(c.url, bodyBytes)
+		go c.cache.Set(c.url.String(), bodyBytes)
 	}
 
 	// 返回原始响应
@@ -64,12 +65,16 @@ func (c *captureResponseRoundTripper) RoundTrip(r *http.Request) (*http.Response
 }
 
 // 代理请求并捕获响应数据
-func httpProxy(w http.ResponseWriter, r *http.Request, cache *fileCache) {
+func httpProxy(w http.ResponseWriter, r *http.Request, cache *omicafe.FileCache) {
 	if isWebSocketRequest(r) {
 		return
 	}
-	if cache != nil && r.Method == "GET" && cache.ReadCache(w, r.URL) {
-		return
+	if cache != nil && r.Method == "GET"  {
+		data:=cache.Get(r.URL.String())
+		if len(data)!=0{
+			w.Write(data)
+			return
+		}
 	}
 	proxyURL := &url.URL{
 		Scheme: "http",

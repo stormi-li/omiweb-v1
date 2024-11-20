@@ -4,6 +4,7 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/stormi-li/omicafe-v1"
 	"github.com/stormi-li/omiserd-v1"
 )
 
@@ -12,7 +13,7 @@ type ProxyServer struct {
 	webRegister *omiserd.Register
 	serverName  string
 	address     string
-	cache       *fileCache
+	cache       *omicafe.FileCache
 }
 
 func (proxyServer *ProxyServer) handleFunc(w http.ResponseWriter, r *http.Request) {
@@ -23,7 +24,7 @@ func (proxyServer *ProxyServer) handleFunc(w http.ResponseWriter, r *http.Reques
 
 func (proxyServer *ProxyServer) SetCache(cacheDir string, maxSize int) {
 	var err error
-	proxyServer.cache, err = newFileCache(cacheDir, maxSize)
+	proxyServer.cache = omicafe.NewFileCache(cacheDir, maxSize)
 	if err != nil {
 		panic(err)
 	}
