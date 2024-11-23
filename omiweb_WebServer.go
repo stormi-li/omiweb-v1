@@ -8,6 +8,8 @@ import (
 	"github.com/go-redis/redis/v8"
 	"github.com/stormi-li/omicafe-v1"
 	"github.com/stormi-li/omiproxy-v1"
+	"github.com/stormi-li/omiserd-v1"
+	omiconst "github.com/stormi-li/omiserd-v1/omiserd_const"
 	register "github.com/stormi-li/omiserd-v1/omiserd_register"
 )
 
@@ -48,6 +50,7 @@ func (webServer *WebServer) handleFunc(w http.ResponseWriter, r *http.Request) {
 
 func (webServer *WebServer) Start(weight int) {
 	webServer.reverseProxy = omiproxy.NewClient(webServer.opts).NewProxy(webServer.serverName, webServer.address, omiproxy.PathMode)
+	omiserd.NewClient(webServer.opts, omiconst.Server).NewRegister(webServer.serverName, webServer.address).RegisterAndServe(weight, func(port string) {})
 	webServer.reverseProxy.SetFailCallback(func(w http.ResponseWriter, r *http.Request) {
 		webServer.handleFunc(w, r)
 	})
