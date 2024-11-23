@@ -19,8 +19,6 @@ go get github.com/stormi-li/omiweb-v1
 ### 使用
 ```go
 import (
-	"embed"
-
 	"github.com/go-redis/redis/v8"
 	"github.com/stormi-li/omiweb-v1"
 )
