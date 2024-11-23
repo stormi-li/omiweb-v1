@@ -7,5 +7,5 @@ import (
 const target_path = "static"
 const index_path = "/index.html"
 
-//go:embed TemplateSource/*
+//go:embed templateSource/static/*
 var templateSource embed.FS

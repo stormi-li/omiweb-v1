@@ -7,6 +7,7 @@ import (
 	"github.com/go-redis/redis/v8"
 	"github.com/gorilla/websocket"
 	"github.com/stormi-li/omiserd-v1"
+	omiconst "github.com/stormi-li/omiserd-v1/omiserd_const"
 )
 
 var upgrader = websocket.Upgrader{
@@ -36,8 +37,8 @@ var redisAddr = "118.25.196.166:3934"
 var password = "12982397StrongPassw0rd"
 
 func main() {
-	register := omiserd.NewClient(&redis.Options{Addr: redisAddr, Password: password}, omiserd.Server).NewRegister("hello_websocket_server", "118.25.196.166:8082")
-	register.RegisterAndListen(1, func(port string) {
+	register := omiserd.NewClient(&redis.Options{Addr: redisAddr, Password: password}, omiconst.Server).NewRegister("hello_websocket_server", "118.25.196.166:8082")
+	register.RegisterAndServe(1, func(port string) {
 		http.HandleFunc("/hello", wsHandler) // 将 /request 路径映射到 wsHandler
 		if err := http.ListenAndServe(port, nil); err != nil {
 			fmt.Println("Error starting server:", err)
