@@ -8,10 +8,10 @@ import (
 	"github.com/go-redis/redis/v8"
 	"github.com/stormi-li/omicafe-v1"
 	"github.com/stormi-li/omiproxy-v1"
-	register "github.com/stormi-li/omiserd-v1/omiserd_register"
+	"github.com/stormi-li/omiserd-v1"
 )
 
-type WebServer struct {
+type OmiWeb struct {
 	serverName     string
 	address        string
 	embeddedSource embed.FS
@@ -19,19 +19,19 @@ type WebServer struct {
 	cache          *omicafe.FileCache
 	opts           *redis.Options
 	PathProxy      *omiproxy.OmiProxy
-	ServerRegister *register.Register
+	ServerRegister *omiserd.Register
 }
 
-func (webServer *WebServer) EmbedSource(embeddedSource embed.FS) {
+func (webServer *OmiWeb) EmbedSource(embeddedSource embed.FS) {
 	webServer.embeddedSource = embeddedSource
 	webServer.embedModel = true
 }
 
-func (webServer *WebServer) SetCache(cacheDir string, maxSize int) {
+func (webServer *OmiWeb) SetCache(cacheDir string, maxSize int) {
 	webServer.cache = omicafe.NewFileCache(cacheDir, maxSize)
 }
 
-func (webServer *WebServer) handleFunc(w http.ResponseWriter, r *http.Request) {
+func (webServer *OmiWeb) handleFunc(w http.ResponseWriter, r *http.Request) {
 	filePath := r.URL.Path
 	if r.URL.Path == "/" {
 		filePath = index_path
@@ -46,7 +46,7 @@ func (webServer *WebServer) handleFunc(w http.ResponseWriter, r *http.Request) {
 	w.Write(data)
 }
 
-func (webServer *WebServer) Start(weight int) {
+func (webServer *OmiWeb) Start(weight int) {
 	webServer.ServerRegister.RegisterAndServe(weight, func(port string) {})
 	webServer.PathProxy.SetFailCallback(func(w http.ResponseWriter, r *http.Request) {
 		webServer.handleFunc(w, r)

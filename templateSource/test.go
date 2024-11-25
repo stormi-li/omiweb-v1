@@ -15,6 +15,6 @@ var embeddedSource embed.FS
 
 func main() {
 	omiweb := omiweb.NewClient(&redis.Options{Addr: redisAddr, Password: password})
-	ws := omiweb.NewWebServer("web_demo", "118.25.196.166:8181")
+	ws := omiweb.NewOmiWeb("web_demo", "118.25.196.166:8181")
 	ws.Start(1)
 }
