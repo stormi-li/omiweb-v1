@@ -12,16 +12,27 @@ import (
 )
 
 type OmiWeb struct {
-	serverName     string
-	address        string
-	embeddedSource embed.FS
-	embedModel     bool
-	cache          *omicafe.FileCache
-	opts           *redis.Options
-	PathProxy      *omiproxy.OmiProxy
-	ServerRegister *omiserd.Register
+	serverName           string
+	address              string
+	embeddedSource       embed.FS
+	embedModel           bool
+	cache                *omicafe.FileCache
+	opts                 *redis.Options
+	PathProxy            *omiproxy.OmiProxy
+	ServerRegister       *omiserd.Register
+	EnableServerRegister bool
 }
 
+func newOmiWeb(opts *redis.Options, serverName, address string) *OmiWeb {
+	return &OmiWeb{
+		serverName:           serverName,
+		address:              address,
+		ServerRegister:       omiserd.NewClient(opts, omiserd.Server).NewRegister(serverName, address),
+		opts:                 opts,
+		PathProxy:            omiproxy.NewClient(opts).NewProxy(serverName, address, omiproxy.PathMode),
+		EnableServerRegister: true,
+	}
+}
 func (webServer *OmiWeb) EmbedSource(embeddedSource embed.FS) {
 	webServer.embeddedSource = embeddedSource
 	webServer.embedModel = true
@@ -51,7 +62,9 @@ func (webServer *OmiWeb) AddHandleFunc(pattern string, handFunc func(w http.Resp
 }
 
 func (webServer *OmiWeb) Start(weight int) {
-	webServer.ServerRegister.RegisterAndServe(weight, func(port string) {})
+	if webServer.EnableServerRegister {
+		webServer.ServerRegister.RegisterAndServe(weight, func(port string) {})
+	}
 	webServer.PathProxy.SetFailCallback(func(w http.ResponseWriter, r *http.Request) {
 		webServer.handleFunc(w, r)
 	})
