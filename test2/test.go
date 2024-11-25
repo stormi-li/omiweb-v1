@@ -9,8 +9,8 @@ var redisAddr = "118.25.196.166:3934"
 var password = "12982397StrongPassw0rd"
 
 func main() {
-	omiweb := omiweb.NewClient(&redis.Options{Addr: redisAddr, Password: password})
-	omiweb.GenerateTemplate()
-	ws := omiweb.NewOmiWeb("test8085", "118.25.196.166:8085")
+	c := omiweb.NewClient(&redis.Options{Addr: redisAddr, Password: password})
+	c.GenerateTemplate()
+	ws := c.NewOmiWeb("test8085", "118.25.196.166:8085")
 	ws.Start(1)
 }
