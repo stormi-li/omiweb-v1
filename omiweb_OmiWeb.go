@@ -45,9 +45,9 @@ func (webServer *OmiWeb) SetCache(cacheDir string, maxSize int) {
 func (webServer *OmiWeb) handleFunc(w http.ResponseWriter, r *http.Request) {
 	filePath := r.URL.Path
 	if r.URL.Path == "/" {
-		filePath = index_path
+		filePath = IndexPath
 	}
-	filePath = target_path + filePath
+	filePath = StaticPath + filePath
 	var data []byte
 	if webServer.embedModel {
 		data, _ = webServer.embeddedSource.ReadFile(filePath)
