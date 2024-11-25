@@ -46,6 +46,10 @@ func (webServer *OmiWeb) handleFunc(w http.ResponseWriter, r *http.Request) {
 	w.Write(data)
 }
 
+func (webServer *OmiWeb) AddHandleFunc(pattern string, handFunc func(w http.ResponseWriter, r *http.Request)) {
+	http.HandleFunc(pattern, handFunc)
+}
+
 func (webServer *OmiWeb) Start(weight int) {
 	webServer.ServerRegister.RegisterAndServe(weight, func(port string) {})
 	webServer.PathProxy.SetFailCallback(func(w http.ResponseWriter, r *http.Request) {
