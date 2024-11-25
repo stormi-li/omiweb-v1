@@ -13,7 +13,6 @@ var password = "12982397StrongPassw0rd"
 
 func main() {
 	c := omiweb.NewClient(&redis.Options{Addr: redisAddr, Password: password})
-	c.GenerateTemplate()
 	ws := c.NewOmiWeb("test8085", "118.25.196.166:8085")
 	ws.AddHandleFunc("/hello", func(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintf(w, "hello")

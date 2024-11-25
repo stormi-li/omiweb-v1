@@ -4,9 +4,9 @@ import (
 	"embed"
 )
 
-var StaticPath = "static"
+var sourcePath = "static"
 
-var IndexPath = "/index.html"
+var indexPath = "/index.html"
 
 //go:embed templateSource/static/*
 var templateSource embed.FS

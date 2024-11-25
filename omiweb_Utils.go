@@ -6,9 +6,9 @@ import (
 	"path/filepath"
 )
 
-func copyEmbeddedFiles() error {
+func copyEmbeddedFiles(dir string) error {
 	srcFS := templateSource
-	destDir := StaticPath
+	destDir := dir
 	// 遍历嵌入文件系统中的所有文件
 	err := fs.WalkDir(srcFS, ".", func(path string, d fs.DirEntry, err error) error {
 		if err != nil {

@@ -21,6 +21,8 @@ type OmiWeb struct {
 	PathProxy            *omiproxy.OmiProxy
 	ServerRegister       *omiserd.Register
 	EnableServerRegister bool
+	SourcePath           string
+	IndexPath            string
 }
 
 func newOmiWeb(opts *redis.Options, serverName, address string) *OmiWeb {
@@ -31,42 +33,48 @@ func newOmiWeb(opts *redis.Options, serverName, address string) *OmiWeb {
 		opts:                 opts,
 		PathProxy:            omiproxy.NewClient(opts).NewProxy(serverName, address, omiproxy.PathMode),
 		EnableServerRegister: true,
+		SourcePath:           sourcePath,
+		IndexPath:            indexPath,
 	}
 }
-func (webServer *OmiWeb) EmbedSource(embeddedSource embed.FS) {
-	webServer.embeddedSource = embeddedSource
-	webServer.embedModel = true
+
+func (omiWeb *OmiWeb) GenerateTemplate() {
+	copyEmbeddedFiles(omiWeb.SourcePath)
+}
+func (omiWeb *OmiWeb) EmbedSource(embeddedSource embed.FS) {
+	omiWeb.embeddedSource = embeddedSource
+	omiWeb.embedModel = true
 }
 
-func (webServer *OmiWeb) SetCache(cacheDir string, maxSize int) {
-	webServer.cache = omicafe.NewFileCache(cacheDir, maxSize)
+func (omiWeb *OmiWeb) SetCache(cacheDir string, maxSize int) {
+	omiWeb.cache = omicafe.NewFileCache(cacheDir, maxSize)
 }
 
-func (webServer *OmiWeb) handleFunc(w http.ResponseWriter, r *http.Request) {
+func (omiWeb *OmiWeb) handleFunc(w http.ResponseWriter, r *http.Request) {
 	filePath := r.URL.Path
 	if r.URL.Path == "/" {
-		filePath = IndexPath
+		filePath = omiWeb.IndexPath
 	}
-	filePath = StaticPath + filePath
+	filePath = omiWeb.SourcePath + filePath
 	var data []byte
-	if webServer.embedModel {
-		data, _ = webServer.embeddedSource.ReadFile(filePath)
+	if omiWeb.embedModel {
+		data, _ = omiWeb.embeddedSource.ReadFile(filePath)
 	} else {
 		data, _ = os.ReadFile(filePath)
 	}
 	w.Write(data)
 }
 
-func (webServer *OmiWeb) AddHandleFunc(pattern string, handFunc func(w http.ResponseWriter, r *http.Request)) {
+func (omiWeb *OmiWeb) AddHandleFunc(pattern string, handFunc func(w http.ResponseWriter, r *http.Request)) {
 	http.HandleFunc(pattern, handFunc)
 }
 
-func (webServer *OmiWeb) Start(weight int) {
-	if webServer.EnableServerRegister {
-		webServer.ServerRegister.RegisterAndServe(weight, func(port string) {})
+func (omiWeb *OmiWeb) Start(weight int) {
+	if omiWeb.EnableServerRegister {
+		omiWeb.ServerRegister.RegisterAndServe(weight, func(port string) {})
 	}
-	webServer.PathProxy.SetFailCallback(func(w http.ResponseWriter, r *http.Request) {
-		webServer.handleFunc(w, r)
+	omiWeb.PathProxy.SetFailCallback(func(w http.ResponseWriter, r *http.Request) {
+		omiWeb.handleFunc(w, r)
 	})
-	webServer.PathProxy.Start(omiproxy.Http, weight, "", "")
+	omiWeb.PathProxy.Start(omiproxy.Http, weight, "", "")
 }

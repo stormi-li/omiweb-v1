@@ -8,9 +8,7 @@ type Client struct {
 	opts *redis.Options
 }
 
-func (c *Client) GenerateTemplate() {
-	copyEmbeddedFiles()
-}
+
 
 func (c *Client) NewOmiWeb(serverName, address string) *OmiWeb {
 	return newOmiWeb(c.opts, serverName, address)
